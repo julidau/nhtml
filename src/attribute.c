@@ -31,9 +31,10 @@ int attr_set_append(attr_set_t * set, attr_t *new_entry) {
 	attr_t * new_ptr = attr_set_find(set, new_entry->name.c_str);
 	if (new_ptr != NULL) {
 		// already contained in set
-		// just change entries value
-		string_destroy(new_ptr->value);
-		new_ptr->value = string_copy(new_entry->value);
+		// concatenate values
+		//new_ptr->value = string_copy(new_entry->value);
+		string_append(&new_ptr->value, ' ');
+		string_concat(&new_ptr->value, &new_entry->value);
 		return 0;
 	}
 
@@ -58,11 +59,8 @@ attr_t attr_copy(attr_t * attr) {
 
 void attr_destroy(attr_t * attr) {
 	// clear memory
-	string_destroy(attr->name);
-	string_destroy(attr->value);
-
-	// reset memory content
-	memset(attr, 0, sizeof(attr_t));
+	string_destroy(&attr->name);
+	string_destroy(&attr->value);
 }
 
 

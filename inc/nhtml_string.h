@@ -25,9 +25,17 @@ typedef struct {
 int string_append(string_t *str, char c);
 
 /**
+ * \brief append src to dest
+ * will enlarge dest to accommodate src
+ * \return -1 on failure (check errno)
+ * \return 0 on success
+ */
+int string_concat(string_t * dest, string_t * src);
+
+/**
  * \brief Erase the String from memory
  */
-void string_destroy(string_t s);
+void string_destroy(string_t *s);
 
 /**
  * \brief copy the contents of a string
@@ -36,5 +44,10 @@ void string_destroy(string_t s);
  */
 string_t string_copy(string_t old);
 
+/**
+ * \brief creates copy of str
+ * \return a copy of str
+ */
+string_t string_from_cstr(const char * str);
 
 #endif /* NHTML_STRING_H_ */

@@ -5,4 +5,5 @@ set(SOURCE
 	${pwd}/nhtml_string.c
 	${pwd}/attribute.c 
 	${pwd}/html.c
+	${pwd}/includes.c
 	PARENT_SCOPE)
