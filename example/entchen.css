@@ -1,0 +1,9 @@
+.strophe {
+	border-width:1px;
+	border-type:solid;
+	border-color:black;
+	background-color:gray;
+	font-type:italic;
+	color: white;
+	padding: 0.5em;
+}
