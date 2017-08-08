@@ -129,6 +129,12 @@ int parse_attr(FILE * stream, attr_set_t * output) {
 			isKey = 1;
 			continue;
 		}
+		if (isKey && buffer == '.') {
+			isKey = 0;
+			current_attr.name.c_str = "class";
+			current_attr.name.len = 6;
+			continue;
+		}
 		if (buffer == '=') {
 			isKey = 0;
 			continue;
@@ -146,12 +152,15 @@ int parse_attr(FILE * stream, attr_set_t * output) {
 
 	// append last attribute
 	attr_set_append(output, &current_attr);
+#ifdef DEBUG
+	printf("parsed attr: %s=%s\n", current_attr.name.c_str, current_attr.value);
+#endif
 
 	//memset(output, 0, sizeof(attr_set_t));
 	return strip(stream);
 }
 
-int parse_text(FILE * stream, FILE * output) {
+int parse_text(int mode, FILE * stream, FILE * output) {
 #ifdef DEBUG
 	printf("parse text\n");
 #endif
@@ -163,12 +172,11 @@ int parse_text(FILE * stream, FILE * output) {
 			escaped = 1;
 			continue;
 		}
-		if (!escaped && buffer == '"') {
+		if (!escaped && buffer == mode) {
 			break;
 		}
 		escaped = 0;
-
-		if (html_escape(buffer, output)) {
+		if (mode == '"' && html_escape(buffer, output)) {
 			continue;
 		}
 
@@ -247,8 +255,10 @@ enum node_type {
 };
 
 int parse_node(int current, FILE * stream, FILE * output) {
-	if (current == '"') {
-		return parse_text(stream, output);
+	if (current == '"' || current == '(') {
+		if (current == '(')	current = ')';
+
+		return parse_text(current, stream, output);
 	}
 
 	// normal node
